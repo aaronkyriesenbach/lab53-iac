@@ -6,7 +6,10 @@ module "docker" {
 
   cpu_cores = 2
   memory    = 2
-  disk_size = 16
+
+  disk = {
+    size = 16
+  }
 
   cloud_init = {
     password = var.cloud_init_password
@@ -22,7 +25,10 @@ module "k3s" {
 
   cpu_cores = 2
   memory    = 2
-  disk_size = 16
+
+  disk = {
+    size = 16
+  }
 
   cloud_init = {
     password = var.cloud_init_password
@@ -52,7 +58,10 @@ module "truenas" {
 
   cpu_cores = 4
   memory    = 16
-  disk_size = 32
+
+  disk = {
+    size = 32
+  }
 
   pci_mappings = {
     hostpci0 = {
@@ -74,7 +83,10 @@ module "docker-public" {
 
   cpu_cores = 4
   memory    = 10
-  disk_size = 32
+
+  disk = {
+    size = 32
+  }
 
   cloud_init = {
     password = var.cloud_init_password

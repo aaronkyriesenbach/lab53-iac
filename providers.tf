@@ -19,5 +19,6 @@ provider "proxmox" {
   endpoint = "https://192.168.4.81:8006"
   insecure = true # Running against IP with PVE self-signed cert
 
-  api_token = var.proxmox_api_token
+  username = var.proxmox_creds.username
+  password = var.proxmox_creds.password
 }

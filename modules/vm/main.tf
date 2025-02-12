@@ -8,6 +8,8 @@ resource "proxmox_virtual_environment_vm" "this" {
   machine = var.machine_type
   on_boot = var.start_on_boot
 
+  template = var.template
+
   dynamic "agent" {
     for_each = var.agent_enabled ? [1] : []
 
@@ -31,7 +33,9 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   disk {
     interface = "scsi0"
-    size      = var.disk_size
+    size      = var.disk.size
+
+    file_id      = var.disk.file_id
   }
 
   dynamic "initialization" {

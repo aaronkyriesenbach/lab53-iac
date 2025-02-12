@@ -34,10 +34,13 @@ variable "cpu_cores" {
   default     = 1
 }
 
-variable "disk_size" {
-  description = "Size of boot drive (GB)"
-  type        = number
-  default     = 8
+variable "disk" {
+  description = "Drive parameters"
+  type = object({
+    size         = optional(number, 8),
+    file_id      = optional(string)
+  })
+  default = {}
 }
 
 variable "cloud_init" {
@@ -48,6 +51,7 @@ variable "cloud_init" {
     username = optional(string, "aaron")
     password = optional(string)
   })
+  default = {}
 }
 
 variable "memory" {
@@ -81,4 +85,10 @@ variable "pci_mappings" {
     pcie    = optional(bool, false)
   }))
   default = {}
+}
+
+variable "template" {
+  description = "Create this VM as a template"
+  type        = bool
+  default     = false
 }
