@@ -37,8 +37,8 @@ variable "cpu_cores" {
 variable "disk" {
   description = "Drive parameters"
   type = object({
-    size         = optional(number, 8),
-    file_id      = optional(string)
+    size    = optional(number, 8),
+    file_id = optional(string)
   })
   default = {}
 }
@@ -91,4 +91,10 @@ variable "template" {
   description = "Create this VM as a template"
   type        = bool
   default     = false
+}
+
+variable "kvm_arguments" {
+  description = "KVM arguments to pass to machine, primarily used for Ignition config"
+  type        = string
+  default     = null
 }

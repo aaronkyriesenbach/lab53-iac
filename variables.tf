@@ -10,7 +10,7 @@ variable "aws_secret_access_key" {
 
 variable "proxmox_creds" {
   description = "Credentials for TF to connect to PVE instance"
-  type        = object({
+  type = object({
     username = string,
     password = string
   })

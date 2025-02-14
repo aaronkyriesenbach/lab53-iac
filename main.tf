@@ -85,7 +85,7 @@ module "docker-public" {
   memory    = 10
 
   disk = {
-    size = 32
+    size = 48
   }
 
   cloud_init = {

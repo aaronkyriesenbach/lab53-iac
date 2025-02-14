@@ -7,6 +7,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   machine = var.machine_type
   on_boot = var.start_on_boot
+  started = false
 
   template = var.template
 
@@ -35,7 +36,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     interface = "scsi0"
     size      = var.disk.size
 
-    file_id      = var.disk.file_id
+    file_id = var.disk.file_id
   }
 
   dynamic "initialization" {
@@ -81,5 +82,11 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   vga {
     type = "std"
+  }
+
+  kvm_arguments = var.kvm_arguments
+
+  lifecycle {
+    ignore_changes = [started]
   }
 }

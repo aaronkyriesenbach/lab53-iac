@@ -3,6 +3,12 @@ terraform {
     proxmox = {
       source = "bpg/proxmox"
     }
+    ignition = {
+      source = "community-terraform-providers/ignition"
+    }
+    ct = {
+      source = "poseidon/ct"
+    }
   }
 
   backend "s3" {

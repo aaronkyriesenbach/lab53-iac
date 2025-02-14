@@ -1,0 +1,7 @@
+variant: fcos
+version: 1.5.0
+passwd:
+  users:
+    - name: core2
+      ssh_authorized_keys:
+        - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJlMOweDhWjna70PMFtxxKEXhHCXGP1P9CfYIKn5gl+6 aaronkyriesenbach@pobox.com"
