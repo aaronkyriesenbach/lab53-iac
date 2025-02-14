@@ -1,0 +1,68 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:v3.40.0
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_TYPE=wireguard
+      - SERVER_COUNTRIES="United States"
+      - PORT_FORWARD_ONLY=on
+      - VPN_PORT_FORWARDING=on
+    volumes:
+      - ./gluetun/config.toml:/gluetun/auth/config.toml
+      - ./gluetun:/gluetun
+    env_file:
+      - token.env
+    expose:
+      - 8000
+      - 9091
+      - 9999
+    ports:
+      - 6881:6881
+      - 6881:6881/udp
+      - 51413:51413
+      - 51413:51413/udp
+    labels:
+      traefik.http.routers.transmission.rule: "Host(`transmission.lab53.net`)"
+      traefik.http.services.transmission.loadbalancer.server.port: 9091
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    restart: unless-stopped
+  transmission:
+    image: lscr.io/linuxserver/transmission:4.0.6-r2-ls281
+    container_name: transmission
+    network_mode: service:gluetun
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - ./config:/config 
+      - /data/downloads:/downloads
+      - ./watch:/watch
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+  gluetrans:
+    image: miklosbagi/gluetrans:v0.3.5
+    container_name: gluetrans
+    environment:
+      GLUETUN_CONTROL_ENDPOINT: http://localhost:8000
+      GLUETUN_HEALTH_ENDPOINT: http://localhost:9999
+      TRANSMISSION_ENDPOINT: http://localhost:9091/transmission/rpc
+      TRANSMISSION_USER: transmission
+      TRANSMISSION_PASS: transmission
+    env_file:
+      - gluetrans_token.env
+    network_mode: service:gluetun
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+
+networks:
+  default:
+    name: docker-public

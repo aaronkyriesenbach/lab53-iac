@@ -1,0 +1,27 @@
+services:
+  pihole:
+    image: pihole/pihole:2024.07.0
+    container_name: pihole
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    environment:
+      TZ: "America/New_York"
+      FTLCONF_LOCAL_IPV4: "192.168.4.82"
+      DNSMASQ_LISTENING: "all"
+      PIHOLE_DNS_: "1.1.1.1;1.0.0.1"
+      VIRTUAL_HOST: "pihole.lab53.net"
+      WEBTHEME: "default-dark"
+      WEBPASSWORD: ${WEBPASSWORD}
+    volumes:
+      - "./config:/etc/pihole"
+      - "./dnsmasq:/etc/dnsmasq.d"
+      - "./logs:/var/log/pihole"
+    labels:
+      - "traefik.http.routers.pihole.rule=Host(`pihole.lab53.net`)"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: docker

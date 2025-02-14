@@ -1,0 +1,49 @@
+http:
+  routers:
+    pve:
+      entryPoints:
+        - websecure
+        - web
+      rule: Host(`pve.lab53.net`)
+      service: pve
+    truenas:
+      entryPoints:
+        - websecure
+        - web
+      rule: Host(`truenas.lab53.net`)
+      service: truenas
+
+  services:
+    pve:
+      loadBalancer:
+        serversTransport: insecureTransport
+        servers:
+          - url: https://192.168.4.81:8006
+    truenas:
+      loadBalancer:
+        serversTransport: insecureTransport
+        servers:
+          - url: https://192.168.4.84
+  
+  serversTransports:
+    insecureTransport:
+      insecureSkipVerify: true
+
+  middlewares:
+    authelia:
+      forwardAuth:
+        address: "http://192.168.4.86:9091/api/verify?rd=https://auth.lab53.net"
+        trustForwardHeader: true
+        authResponseHeaders: "Remote-User,Remote-Groups,Remote-Name,Remote-Email"
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305

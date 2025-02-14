@@ -1,0 +1,12 @@
+services:
+  carpal:
+    image: peeley/carpal:latest
+    labels:
+      - "traefik.http.routers.carpal.rule=Host(`lab53.net`) && Path(`/.well-known/webfinger`)"
+    volumes:
+      - ".:/etc/carpal"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: docker-public

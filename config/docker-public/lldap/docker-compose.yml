@@ -1,0 +1,22 @@
+services:
+  lldap:
+    image: lldap/lldap:stable
+    expose:
+      - 17170
+    volumes:
+      - "./data:/data"
+    env_file:
+      - .env
+    environment:
+      TZ: America/New_York
+      LLDAP_LDAP_BASE_DN: dc=lab53,dc=net
+      LLDAP_JWT_SECRET: ${LLDAP_JWT_SECRET}
+      LLDAP_KEY_SEED: ${LLDAP_KEY_SEED}
+      LLDAP_LDAP_USER_PASS: ${LLDAP_LDAP_USER_PASS}
+    labels:
+      traefik.http.routers.ldap.rule: "Host(`ldap.lab53.net`)"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: docker-public

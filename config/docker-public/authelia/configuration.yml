@@ -1,0 +1,43 @@
+authentication_backend:
+  ldap:
+    address: ldap://lldap:3890
+    implementation: lldap
+    base_dn: "DC=lab53,DC=net"
+    user: "UID=authelia,OU=people,DC=lab53,DC=net"
+
+storage:
+  local:
+    path: /config/db.sqlite3
+
+session:
+  cookies:
+    - domain: lab53.net
+      authelia_url: https://auth.lab53.net
+
+notifier:
+  filesystem:
+    filename: /config/notification.txt
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: "*.lab53.net"
+      policy: one_factor
+
+identity_providers:
+  oidc:
+    jwks:
+      - key: {{ secret "/secrets/jwk_private.pem" | mindent 10 "|" | msquote }}
+    clients:
+      - client_id: tailscale
+        client_name: Tailscale SSO
+        client_secret: $pbkdf2-sha512$310000$RM0fzKMw38RxttTvALU3Tw$mWgP4QVLbQieihN99TfL8utB7VOpFof1Xfd70AoNBqlPlmxsTie9Xu53kyP/DQWMW3tZFXtZn57kKnzfW41YiQ
+        redirect_uris:
+          - https://login.tailscale.com/a/oauth_response
+        scopes:
+          - openid
+          - email
+          - profile
+
+default_2fa_method: totp
+theme: dark

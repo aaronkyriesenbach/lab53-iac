@@ -1,0 +1,16 @@
+services:
+  ladder:
+    image: ghcr.io/everywall/ladder:latest
+    container_name: ladder
+    environment:
+      RULESET: "https://raw.githubusercontent.com/everywall/ladder-rules/main/ruleset.yaml"
+    expose:
+      - 8080
+    labels:
+      traefik.http.routers.ladder.rule: "Host(`ladder.lab53.net`)"
+      traefik.http.routers.ladder.middlewares: "authelia@docker"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: docker-public

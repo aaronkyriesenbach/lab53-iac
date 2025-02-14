@@ -1,0 +1,13 @@
+driver: ldap
+ldap:
+  url: ldap://lldap:3890
+  bind_user: uid=carpal,ou=people,dc=lab53,dc=net
+  bind_pass: 
+  basedn: dc=lab53,dc=net
+  filter: (uid=*)
+  user_attr: uid
+  attributes:
+    - uid
+    - mail
+    - cn
+  template: /etc/carpal/oidc.gotempl

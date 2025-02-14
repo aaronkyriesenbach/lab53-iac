@@ -1,0 +1,25 @@
+services:
+  traefik:
+    image: traefik:v3.3
+    container_name: traefik
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/etc/traefik
+      - ./logs:/logs
+    environment:
+      TZ: "America/New_York"
+      AWS_REGION: "us-east-1"
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+    labels:
+      traefik.http.routers.traefik-public.rule: "Host(`traefik-public.lab53.net`)"
+      traefik.http.routers.traefik-public.middlewares: "authelia@docker"
+      traefik.http.routers.traefik-public.service: "api@internal"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: docker-public

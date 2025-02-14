@@ -1,0 +1,35 @@
+http:
+  routers:
+    readarr:
+      entryPoints:
+        - websecure
+        - web
+      rule: Host(`readarr.lab53.net`)
+      service: readarr
+
+  services:
+    readarr:
+      loadBalancer:
+        servers:
+          - url: http://192.168.4.87:8787
+
+  middlewares:
+    security-headers:
+      headers:
+        contentSecurityPolicy: "Content-Security-Policy: default-src 'self'; frame-ancestors 'self'; form-action 'self'; upgrade-insecure-requests;"
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        contentTypeNoSniff: true
+        frameDeny: true
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305

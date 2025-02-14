@@ -1,0 +1,52 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+api:
+  dashboard: true
+  insecure: true
+
+log:
+  level: DEBUG
+
+acmeLogging: true
+
+entryPoints:
+  web:
+   http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: :443
+    transport:
+      respondingTimeouts:
+        readTimeout: 600s
+        idleTimeout: 600s
+        writeTimeout: 600s
+    http:
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: lab53.net
+            sans:
+              - '*.lab53.net'
+
+providers:
+  docker: true
+  file:
+    filename: /etc/traefik/fileConfig.yml
+    watch: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: aaronkyriesenbach@pobox.com
+      storage: /etc/traefik/acme.json
+      dnsChallenge:
+        provider: route53
+        resolvers:
+          - '1.1.1.1:53'
+          - '1.0.0.1:53'

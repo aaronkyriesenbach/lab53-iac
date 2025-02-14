@@ -1,0 +1,21 @@
+services:
+  calibre-web-automated:
+    image: crocodilestick/calibre-web-automated:latest
+    container_name: calibre-web-automated
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/New_York
+    volumes:
+      - ./config:/config 
+      - /data/cwa-book-ingest:/cwa-book-ingest
+      - /data/books:/calibre-library 
+    expose:
+      - 8083
+    labels:
+      traefik.http.routers.calibre-web-automated.rule: "Host(`cwa.lab53.net`)"
+    restart: unless-stopped
+
+networks:
+  default:
+    name: docker-public

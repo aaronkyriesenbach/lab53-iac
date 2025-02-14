@@ -1,0 +1,20 @@
+services:
+  influxdb2:
+    image: influxdb:2
+    container_name: influxdb
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: aaron
+      DOCKER_INFLUXDB_INIT_ORG: lab53
+      DOCKER_INFLUXDB_INIT_BUCKET: pve
+    env_file:
+      - password.env
+    volumes:
+      - ./config:/etc/influxdb2
+      - ./data:/var/lib/influxdb2
+    labels:
+      traefik.http.routers.influx.rule: Host(`influx.lab53.net`)
+
+networks:
+  default:
+    name: docker
