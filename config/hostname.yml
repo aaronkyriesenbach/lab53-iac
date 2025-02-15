@@ -1,0 +1,9 @@
+variant: flatcar
+version: 1.0.0
+storage:
+  files:
+    - path: /etc/hostname
+      mode: 0644
+      overwrite: true
+      contents:
+        inline: ${hostname}.lab53.net
