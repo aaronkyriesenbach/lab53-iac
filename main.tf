@@ -5,7 +5,7 @@ module "docker" {
   id   = 200
 
   cpu_cores = 2
-  memory    = 2
+  memory    = 16
 
   disk = {
     size = 16
@@ -24,7 +24,7 @@ module "k3s" {
   start_on_boot = false
 
   cpu_cores = 2
-  memory    = 2
+  memory    = 8
 
   disk = {
     size = 16
@@ -57,7 +57,7 @@ module "truenas" {
   agent_enabled = false
 
   cpu_cores = 4
-  memory    = 16
+  memory    = 128
 
   disk = {
     size = 32
@@ -82,7 +82,7 @@ module "docker-public" {
   id   = 300
 
   cpu_cores = 4
-  memory    = 10
+  memory    = 32
 
   disk = {
     size = 48
