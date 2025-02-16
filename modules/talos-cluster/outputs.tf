@@ -12,8 +12,3 @@ output "kubeconfig" {
   description = "Kubeconfig for provisioned cluster"
   value       = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
 }
-
-output "host_address" {
-  description = "Host address for cluster endpoint"
-  value       = local.host_address
-}

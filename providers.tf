@@ -3,9 +3,6 @@ terraform {
     proxmox = {
       source = "bpg/proxmox"
     }
-    ct = {
-      source = "poseidon/ct"
-    }
     talos = {
       source = "siderolabs/talos"
     }
@@ -14,6 +11,9 @@ terraform {
     }
     helm = {
       source = "hashicorp/helm"
+    }
+    kubernetes = {
+      source = "hashicorp/kubernetes"
     }
   }
 
@@ -39,4 +39,8 @@ provider "helm" {
   kubernetes {
     config_path = "output/kubeconfig"
   }
+}
+
+provider "kubernetes" {
+  config_path = "output/kubeconfig"
 }

@@ -36,3 +36,35 @@ resource "helm_release" "argocd" {
   namespace        = "argocd"
   create_namespace = true
 }
+
+resource "kubernetes_manifest" "catalyst" {
+  manifest = {
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+
+    metadata = {
+      name      = "catalyst"
+      namespace = "argocd"
+    }
+
+    spec = {
+      project = "default"
+
+      destination = {
+        server = "https://kubernetes.default.svc"
+      }
+
+      source = {
+        repoURL = "https://github.com/aaronkyriesenbach/catalyst"
+        path = "."
+      }
+
+      syncPolicy = {
+        automated = {
+          prune = true
+          selfHeal = true
+        }
+      }
+    }
+  }
+}
