@@ -6,7 +6,7 @@ locals {
 data "talos_machine_configuration" "control-plane-config" {
   cluster_name     = var.cluster_name
   machine_type     = "controlplane"
-  cluster_endpoint = "https://${local.control_planes[var.base_vm_id]}:6443"
+  cluster_endpoint = local.host_address
   machine_secrets  = talos_machine_secrets.secrets.machine_secrets
 
   config_patches = [

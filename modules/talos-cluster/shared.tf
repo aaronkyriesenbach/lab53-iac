@@ -2,6 +2,8 @@ locals {
   ip_base_split  = split(".", var.network.base_ip)
   ip_base        = join(".", slice(local.ip_base_split, 0, 3))
   device_ip_base = local.ip_base_split[3]
+
+  host_address = "https://${local.control_planes[var.base_vm_id]}:6443"
 }
 
 data "talos_image_factory_urls" "talos-urls" {

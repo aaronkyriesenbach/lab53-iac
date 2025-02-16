@@ -12,6 +12,9 @@ terraform {
     local = {
       source = "hashicorp/local"
     }
+    helm = {
+      source = "hashicorp/helm"
+    }
   }
 
   backend "s3" {
@@ -30,4 +33,10 @@ provider "proxmox" {
 
   username = var.proxmox_creds.username
   password = var.proxmox_creds.password
+}
+
+provider "helm" {
+  kubernetes {
+    config_path = "output/kubeconfig"
+  }
 }
