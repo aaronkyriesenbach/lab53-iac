@@ -3,11 +3,14 @@ terraform {
     proxmox = {
       source = "bpg/proxmox"
     }
-    ignition = {
-      source = "community-terraform-providers/ignition"
-    }
     ct = {
       source = "poseidon/ct"
+    }
+    talos = {
+      source = "siderolabs/talos"
+    }
+    local = {
+      source = "hashicorp/local"
     }
   }
 

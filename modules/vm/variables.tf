@@ -14,6 +14,12 @@ variable "start_on_boot" {
   default     = true
 }
 
+variable "start_on_provision" {
+  description = "Whether to start VM immediately after provisioning"
+  type        = bool
+  default     = false
+}
+
 variable "clone" {
   description = "Clone configuration"
   type = object({
@@ -47,13 +53,15 @@ variable "cloud_init" {
   description = "Cloud init config for provisioned VMs"
   type = object({
     enabled  = optional(bool, true)
-    keys     = optional(set(string), ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJlMOweDhWjna70PMFtxxKEXhHCXGP1P9CfYIKn5gl+6 aaronkyriesenbach@pobox.com"])
+    keys     = optional(set(string), ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJlMOweDhWjna70PMFtxxKEXhHCXGP1P9CfYIKn5gl+6 aaron@kyriesenba.ch"])
     username = optional(string, "aaron")
     password = optional(string)
     network = optional(object({
       ip_address = optional(string, "dhcp")
       gateway    = optional(string)
     }), {})
+    provide_user = optional(bool, true)
+    provide_ssh  = optional(bool, true)
   })
   default = {}
 

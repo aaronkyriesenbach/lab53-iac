@@ -7,13 +7,13 @@ data "ct_config" "docker-flatcar-config" {
   ]
 }
 
-module "docker-flatcar" {
-  source = "./modules/flatcar-vm"
-
-  id   = 505
-  name = "docker-flatcar"
-
-  start_on_boot = false
-
-  ignition_config = data.ct_config.docker-flatcar-config.rendered
-}
+# module "docker-flatcar" {
+#   source = "./modules/flatcar-vm"
+#
+#   id   = 505
+#   name = "docker-flatcar"
+#
+#   start_on_boot = false
+#
+#   ignition_config = data.ct_config.docker-flatcar-config.rendered
+# }

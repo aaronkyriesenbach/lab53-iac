@@ -7,7 +7,7 @@ resource "proxmox_virtual_environment_vm" "this" {
 
   machine = var.machine_type
   on_boot = var.start_on_boot
-  started = false
+  started = var.start_on_provision
 
   template = var.template
 
@@ -51,8 +51,8 @@ resource "proxmox_virtual_environment_vm" "this" {
       }
 
       user_account {
-        keys     = var.cloud_init.keys
-        username = var.cloud_init.username
+        keys     = var.cloud_init.provide_ssh ? var.cloud_init.keys : null
+        username = var.cloud_init.provide_user ? var.cloud_init.username : null
         password = var.cloud_init.password
       }
     }
