@@ -9,7 +9,7 @@ resource "proxmox_virtual_environment_download_file" "flatcar_img" {
   datastore_id = "local"
   node_name    = "pve"
 
-  url      = local.download_url
+  url = local.download_url
 }
 
 module "flatcar-vm" {

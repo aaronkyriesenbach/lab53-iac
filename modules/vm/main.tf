@@ -45,7 +45,8 @@ resource "proxmox_virtual_environment_vm" "this" {
     content {
       ip_config {
         ipv4 {
-          address = "dhcp"
+          address = var.cloud_init.network.ip_address
+          gateway = var.cloud_init.network.gateway
         }
       }
 

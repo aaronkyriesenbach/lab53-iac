@@ -8,8 +8,3 @@ passwd:
 kernel_arguments:
   should_exist:
     - flatcar.first_boot=1
-storage:
-  file:
-    overwrite: true
-  link:
-    overwrite: true

@@ -50,8 +50,17 @@ variable "cloud_init" {
     keys     = optional(set(string), ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJlMOweDhWjna70PMFtxxKEXhHCXGP1P9CfYIKn5gl+6 aaronkyriesenbach@pobox.com"])
     username = optional(string, "aaron")
     password = optional(string)
+    network = optional(object({
+      ip_address = optional(string, "dhcp")
+      gateway    = optional(string)
+    }), {})
   })
   default = {}
+
+  validation {
+    condition     = var.cloud_init.network.ip_address == "dhcp" || var.cloud_init.network.gateway != null
+    error_message = "Gateway must be provided if static IP is set"
+  }
 }
 
 variable "memory" {

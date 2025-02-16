@@ -1,3 +1,7 @@
+locals {
+  gateway_ip = "192.168.4.1"
+}
+
 module "docker" {
   source = "./modules/vm"
 
@@ -12,7 +16,11 @@ module "docker" {
   }
 
   cloud_init = {
-    password = var.cloud_init_password
+    password = var.cloud_init_password,
+    network = {
+      ip_address = "192.168.4.82/24",
+      gateway    = local.gateway_ip
+    }
   }
 }
 
@@ -89,6 +97,10 @@ module "docker-public" {
   }
 
   cloud_init = {
-    password = var.cloud_init_password
+    password = var.cloud_init_password,
+    network = {
+      ip_address = "192.168.4.86/24",
+      gateway    = local.gateway_ip
+    }
   }
 }
