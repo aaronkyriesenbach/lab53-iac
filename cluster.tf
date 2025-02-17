@@ -21,50 +21,13 @@ module "talos-cluster" {
 resource "local_file" "talosconfig" {
   filename = "output/talosconfig"
   content  = module.talos-cluster.talos_config
+
+  depends_on = [module.talos-cluster]
 }
 
 resource "local_file" "kubeconfig" {
   filename = "output/kubeconfig"
   content  = module.talos-cluster.kubeconfig
-}
 
-resource "helm_release" "argocd" {
-  chart      = "argo-cd"
-  name       = "argocd"
-  repository = "https://argoproj.github.io/argo-helm"
-
-  namespace        = "argocd"
-  create_namespace = true
-}
-
-resource "kubernetes_manifest" "catalyst" {
-  manifest = {
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-
-    metadata = {
-      name      = "catalyst"
-      namespace = "argocd"
-    }
-
-    spec = {
-      project = "default"
-
-      destination = {
-        server = "https://kubernetes.default.svc"
-      }
-
-      source = {
-        repoURL = "https://github.com/aaronkyriesenbach/catalyst"
-        path = "."
-      }
-
-      syncPolicy = {
-        automated = {
-          prune = true
-          selfHeal = true
-        }
-      }
-    }
-  }
+  depends_on = [module.talos-cluster]
 }

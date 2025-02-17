@@ -3,7 +3,9 @@ locals {
   ip_base        = join(".", slice(local.ip_base_split, 0, 3))
   device_ip_base = local.ip_base_split[3]
 
-  host_address = "https://${local.control_planes[var.base_vm_id]}:6443"
+  control_plane_ip = local.control_planes[var.base_vm_id]
+
+  host_address = "https://${local.control_plane_ip}:6443"
 }
 
 data "talos_image_factory_urls" "talos-urls" {
@@ -30,5 +32,5 @@ data "talos_client_configuration" "client-config" {
 resource "talos_cluster_kubeconfig" "kubeconfig" {
   client_configuration = data.talos_client_configuration.client-config.client_configuration
 
-  node = local.control_planes[var.base_vm_id]
+  node = local.control_plane_ip
 }

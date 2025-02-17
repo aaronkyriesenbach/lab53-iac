@@ -12,3 +12,8 @@ output "kubeconfig" {
   description = "Kubeconfig for provisioned cluster"
   value       = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
 }
+
+output "control_plane_ip" {
+  description = "IP address of first control plane"
+  value       = local.control_plane_ip
+}

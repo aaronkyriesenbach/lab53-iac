@@ -12,8 +12,8 @@ terraform {
     helm = {
       source = "hashicorp/helm"
     }
-    kubernetes = {
-      source = "hashicorp/kubernetes"
+    kubectl = {
+      source = "alekc/kubectl"
     }
   }
 
@@ -37,10 +37,10 @@ provider "proxmox" {
 
 provider "helm" {
   kubernetes {
-    config_path = "output/kubeconfig"
+    config_path = local_file.kubeconfig.filename
   }
 }
 
-provider "kubernetes" {
-  config_path = "output/kubeconfig"
+provider "kubectl" {
+  config_path = local_file.kubeconfig.filename
 }
