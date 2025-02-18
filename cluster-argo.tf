@@ -7,9 +7,9 @@ resource "helm_release" "argocd" {
   create_namespace = true
 
   values = [yamlencode({
-    controller = {
-      ingressClass = {
-        setAsDefaultIngress = true
+    configs = {
+      cm = {
+        "kustomize.buildOptions" = "--enable-helm"
       }
     }
   })]

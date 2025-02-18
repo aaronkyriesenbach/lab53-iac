@@ -1,20 +1,20 @@
 locals {
   metallb_namespace = "metallb-system"
-  ip_pool_name = "lab53-pool"
+  ip_pool_name      = "lab53-pool"
 }
 
 # The namespace must be created prior to MetalLB install because it requires elevated permissions
 resource "kubectl_manifest" "metallb-system-namespace" {
   yaml_body = yamlencode({
     apiVersion = "v1"
-    kind = "Namespace"
+    kind       = "Namespace"
     metadata = {
       name = local.metallb_namespace
       labels = {
-        name = local.metallb_namespace
+        name                                 = local.metallb_namespace
         "pod-security.kubernetes.io/enforce" = "privileged"
-        "pod-security.kubernetes.io/audit" = "privileged"
-        "pod-security.kubernetes.io/warn" = "privileged"
+        "pod-security.kubernetes.io/audit"   = "privileged"
+        "pod-security.kubernetes.io/warn"    = "privileged"
       }
     }
   })
@@ -33,9 +33,9 @@ resource "helm_release" "metallb" {
 resource "kubectl_manifest" "metallb-ipaddresspool" {
   yaml_body = yamlencode({
     apiVersion = "metallb.io/v1beta1"
-    kind = "IPAddressPool"
+    kind       = "IPAddressPool"
     metadata = {
-      name = local.ip_pool_name
+      name      = local.ip_pool_name
       namespace = local.metallb_namespace
     }
     spec = {
@@ -49,9 +49,9 @@ resource "kubectl_manifest" "metallb-ipaddresspool" {
 resource "kubectl_manifest" "metallb-l2advertisement" {
   yaml_body = yamlencode({
     apiVersion = "metallb.io/v1beta1"
-    kind = "L2Advertisement"
+    kind       = "L2Advertisement"
     metadata = {
-      name = "${local.ip_pool_name}-advertisement"
+      name      = "${local.ip_pool_name}-advertisement"
       namespace = local.metallb_namespace
     }
   })

@@ -37,10 +37,10 @@ provider "proxmox" {
 
 provider "helm" {
   kubernetes {
-    config_path = local_file.kubeconfig.filename
+    config_path = "output/kubeconfig"
   }
 }
 
 provider "kubectl" {
-  config_path = local_file.kubeconfig.filename
+  config_path = "output/kubeconfig"
 }
