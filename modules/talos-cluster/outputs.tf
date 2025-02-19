@@ -5,12 +5,12 @@ output "client_config" {
 
 output "talos_config" {
   description = "Talos config for provisioned cluster"
-  value       = data.talos_client_configuration.client-config.talos_config
+  value       = { path = local_file.talosconfig.filename, raw = data.talos_client_configuration.client-config.talos_config }
 }
 
 output "kubeconfig" {
   description = "Kubeconfig for provisioned cluster"
-  value       = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
+  value       = { path = local_file.kubeconfig.filename, raw = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw }
 }
 
 output "control_plane_ip" {

@@ -9,7 +9,7 @@ module "talos-cluster" {
   }
 
   workers = {
-    nodes = 3
+    nodes = 5
   }
 
   network = {
@@ -18,16 +18,22 @@ module "talos-cluster" {
   }
 }
 
-resource "local_file" "talosconfig" {
-  filename = "output/talosconfig"
-  content  = module.talos-cluster.talos_config
+module "cluster-metallb" {
+  source = "./modules/cluster-metallb"
+
+  ip_pool_name      = "lab53-pool"
+  ip_pool_addresses = ["192.168.4.100-192.168.4.200"]
 
   depends_on = [module.talos-cluster]
 }
 
-resource "local_file" "kubeconfig" {
-  filename = "output/kubeconfig"
-  content  = module.talos-cluster.kubeconfig
+module "cluster-argocd" {
+  source = "./modules/cluster-argocd"
+
+  seed_app = {
+    name     = "catalyst"
+    repo_url = "https://github.com/aaronkyriesenbach/catalyst"
+  }
 
   depends_on = [module.talos-cluster]
 }

@@ -47,3 +47,18 @@ variable "cluster_name" {
   description = "Name of cluster to provison"
   type        = string
 }
+
+variable "config_path" {
+  description = "Path to create config files at"
+  type        = string
+  default     = "output"
+}
+
+variable "cluster_wait" {
+  description = "Wait parameters for cluster readiness"
+  type = object({
+    mins = optional(number, 10)
+    retry_secs = optional(number, 5)
+  })
+  default = {}
+}

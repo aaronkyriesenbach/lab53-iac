@@ -13,17 +13,15 @@ resource "helm_release" "argocd" {
       }
     }
   })]
-
-  depends_on = [module.talos-cluster, helm_release.metallb]
 }
 
-resource "kubectl_manifest" "catalyst" {
+resource "kubectl_manifest" "seed-app" {
   yaml_body = yamlencode({
     apiVersion = "argoproj.io/v1alpha1"
     kind       = "Application"
 
     metadata = {
-      name      = "catalyst"
+      name      = var.seed_app.name
       namespace = "argocd"
     }
 
@@ -35,7 +33,7 @@ resource "kubectl_manifest" "catalyst" {
       }
 
       source = {
-        repoURL = "https://github.com/aaronkyriesenbach/catalyst"
+        repoURL = var.seed_app.repo_url
         path    = "."
       }
 

@@ -37,10 +37,10 @@ provider "proxmox" {
 
 provider "helm" {
   kubernetes {
-    config_path = "output/kubeconfig"
+    config_path = module.talos-cluster.kubeconfig.path
   }
 }
 
 provider "kubectl" {
-  config_path = "output/kubeconfig"
+  config_path = module.talos-cluster.kubeconfig.path
 }

@@ -34,3 +34,37 @@ resource "talos_cluster_kubeconfig" "kubeconfig" {
 
   node = local.control_plane_ip
 }
+
+resource "local_file" "talosconfig" {
+  filename = "${var.config_path}/talosconfig"
+  content  = data.talos_client_configuration.client-config.talos_config
+
+  depends_on = [data.talos_client_configuration.client-config]
+}
+
+resource "local_file" "kubeconfig" {
+  filename = "${var.config_path}/kubeconfig"
+  content  = talos_cluster_kubeconfig.kubeconfig.kubeconfig_raw
+
+  depends_on = [talos_cluster_kubeconfig.kubeconfig]
+}
+
+data "http" "wait_for_cluster" {
+  url = "${local.host_address}/readyz"
+
+  insecure           = true
+
+  retry {
+    attempts = (var.cluster_wait.mins * 60 / var.cluster_wait.retry_secs) - 1
+
+    min_delay_ms = var.cluster_wait.retry_secs * 1000
+  }
+
+  depends_on = [module.control-planes, module.worker-nodes]
+}
+
+resource "time_sleep" "finalize_cluster" {
+  create_duration = "10s" # Wait a final 10 seconds after cluster is ready before proceeding
+
+  depends_on = [data.http.wait_for_cluster]
+}
