@@ -10,6 +10,9 @@ resource "helm_release" "argocd" {
     configs = {
       cm = {
         "kustomize.buildOptions" = "--enable-helm"
+        exec = {
+          enabled = true
+        }
       }
     }
   })]

@@ -55,6 +55,11 @@ resource "proxmox_virtual_environment_vm" "this" {
         username = var.cloud_init.provide_user ? var.cloud_init.username : null
         password = var.cloud_init.password
       }
+
+      dns {
+        domain  = var.cloud_init.dns.domain
+        servers = var.cloud_init.dns.servers
+      }
     }
   }
 

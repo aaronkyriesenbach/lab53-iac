@@ -22,7 +22,7 @@ module "cluster-metallb" {
   source = "./modules/cluster-metallb"
 
   ip_pool_name      = "lab53-pool"
-  ip_pool_addresses = ["192.168.4.100-192.168.4.200"]
+  ip_pool_addresses = ["192.168.4.100-192.168.4.100"]
 
   depends_on = [module.talos-cluster]
 }

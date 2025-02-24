@@ -62,6 +62,10 @@ variable "cloud_init" {
     }), {})
     provide_user = optional(bool, true)
     provide_ssh  = optional(bool, true)
+    dns = optional(object({
+      domain  = optional(string, "lab53.net")
+      servers = optional(list(string))
+    }), {})
   })
   default = {}
 

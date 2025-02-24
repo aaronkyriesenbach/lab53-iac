@@ -57,7 +57,7 @@ variable "config_path" {
 variable "cluster_wait" {
   description = "Wait parameters for cluster readiness"
   type = object({
-    mins = optional(number, 10)
+    mins       = optional(number, 10)
     retry_secs = optional(number, 5)
   })
   default = {}

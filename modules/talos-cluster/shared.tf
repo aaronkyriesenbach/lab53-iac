@@ -3,7 +3,7 @@ locals {
   ip_base        = join(".", slice(local.ip_base_split, 0, 3))
   device_ip_base = local.ip_base_split[3]
 
-  control_plane_ip = local.control_planes[var.base_vm_id]
+  control_plane_ip = local.control_planes[var.base_vm_id].ip
 
   host_address = "https://${local.control_plane_ip}:6443"
 }
@@ -52,7 +52,7 @@ resource "local_file" "kubeconfig" {
 data "http" "wait_for_cluster" {
   url = "${local.host_address}/readyz"
 
-  insecure           = true
+  insecure = true
 
   retry {
     attempts = (var.cluster_wait.mins * 60 / var.cluster_wait.retry_secs) - 1
