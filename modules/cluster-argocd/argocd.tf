@@ -43,7 +43,6 @@ resource "kubectl_manifest" "seed-app" {
       syncPolicy = {
         automated = {
           prune    = true
-          selfHeal = true
         }
       }
     }
