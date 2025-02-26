@@ -23,7 +23,8 @@ data "talos_machine_configuration" "control-plane-config" {
         }
 
         network = {
-          hostname = "${each.value.hostname}.lab53.net"
+          hostname            = "${each.value.hostname}.lab53.net"
+          disableSearchDomain = true
         }
       }
   })]
@@ -70,10 +71,6 @@ module "control-planes" {
     network = {
       ip_address = "${each.value.ip}/24"
       gateway    = var.network.gateway_ip
-    }
-
-    dns = {
-      domain = "example.com"
     }
   }
 }

@@ -23,7 +23,8 @@ data "talos_machine_configuration" "worker-config" {
         }
 
         network = {
-          hostname = "${each.value.hostname}.lab53.net"
+          hostname            = "${each.value.hostname}.lab53.net"
+          disableSearchDomain = true
         }
 
         kubelet = {
@@ -72,10 +73,6 @@ module "worker-nodes" {
     network = {
       ip_address = "${each.value.ip}/24"
       gateway    = var.network.gateway_ip
-    }
-
-    dns = {
-      domain = "example.com"
     }
   }
 }
