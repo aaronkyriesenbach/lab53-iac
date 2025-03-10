@@ -6,16 +6,87 @@ resource "helm_release" "argocd" {
   namespace        = "argocd"
   create_namespace = true
 
-  values = [yamlencode({
-    configs = {
-      cm = {
-        "kustomize.buildOptions" = "--enable-helm"
-        exec = {
-          enabled = true
+  values = [
+    yamlencode({
+      global = {
+        domain = "argo.lab53.net"
+      }
+
+      configs = {
+        cm = {
+          "kustomize.buildOptions" = "--enable-helm"
+          exec = {
+            enabled = true
+          }
+        }
+
+        cmp = {
+          create = true
+          plugins = {
+            cdk8s-typescript = {
+              init = {
+                command = ["sh", "-c"]
+                args    = ["npm install && cd ../shared && npm install"]
+              }
+              generate = {
+                command = ["cdk8s", "synth"]
+                args    = ["--stdout"]
+              }
+              discover = {
+                fileName = "*.ts"
+              }
+            }
+          }
         }
       }
-    }
-  })]
+
+      repoServer = {
+        extraContainers = [
+          {
+            name    = "cdk8s-cmp"
+            command = ["/var/run/argocd/argocd-cmp-server"]
+            image   = "ghcr.io/akuity/cdk8s-cmp-typescript:latest"
+            securityContext = {
+              runAsNonRoot = true
+              runAsUser    = 999
+            }
+            volumeMounts = [
+              {
+                name      = "plugin-config"
+                mountPath = "/home/argocd/cmp-server/config/plugin.yaml"
+                subPath   = "cdk8s-typescript.yaml"
+              },
+              {
+                name      = "var-files"
+                mountPath = "/var/run/argocd"
+              },
+              {
+                name      = "plugins"
+                mountPath = "/home/argocd/cmp-server/plugins"
+              },
+              {
+                name      = "cmp-tmp"
+                mountPath = "/tmp"
+              }
+            ]
+          }
+        ]
+
+        volumes = [
+          {
+            name = "plugin-config"
+            configMap = {
+              name = "argocd-cmp-cm"
+            }
+          },
+          {
+            name     = "cmp-tmp"
+            emptyDir = {}
+          }
+        ]
+      }
+    })
+  ]
 }
 
 resource "kubectl_manifest" "seed-app" {
@@ -38,12 +109,6 @@ resource "kubectl_manifest" "seed-app" {
       source = {
         repoURL = var.seed_app.repo_url
         path    = "."
-      }
-
-      syncPolicy = {
-        automated = {
-          prune    = true
-        }
       }
     }
   })
