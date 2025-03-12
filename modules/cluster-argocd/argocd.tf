@@ -23,17 +23,12 @@ resource "helm_release" "argocd" {
         cmp = {
           create = true
           plugins = {
-            cdk8s-typescript = {
-              init = {
-                command = ["sh", "-c"]
-                args    = ["npm install && cd ../shared && npm install"]
-              }
+            cdk8s-deno = {
               generate = {
-                command = ["cdk8s", "synth"]
-                args    = ["--stdout"]
+                command = ["deno", "task", "synth"]
               }
               discover = {
-                fileName = "*.ts"
+                fileName = "deno.json"
               }
             }
           }
@@ -43,9 +38,9 @@ resource "helm_release" "argocd" {
       repoServer = {
         extraContainers = [
           {
-            name    = "cdk8s-cmp"
+            name    = "cdk8s-deno-cmp"
             command = ["/var/run/argocd/argocd-cmp-server"]
-            image   = "ghcr.io/akuity/cdk8s-cmp-typescript:latest"
+            image   = "denoland/deno:2.2.3"
             securityContext = {
               runAsNonRoot = true
               runAsUser    = 999
@@ -54,7 +49,7 @@ resource "helm_release" "argocd" {
               {
                 name      = "plugin-config"
                 mountPath = "/home/argocd/cmp-server/config/plugin.yaml"
-                subPath   = "cdk8s-typescript.yaml"
+                subPath   = "cdk8s-deno.yaml"
               },
               {
                 name      = "var-files"
@@ -67,6 +62,10 @@ resource "helm_release" "argocd" {
               {
                 name      = "cmp-tmp"
                 mountPath = "/tmp"
+              },
+              {
+                name      = "cmp-tmp"
+                mountPath = "/deno-dir"
               }
             ]
           }
