@@ -13,8 +13,8 @@ variable "workers" {
   type = object({
     nodes     = number,
     cores     = optional(number, 2)
-    memory    = optional(number, 8)
-    disk_size = optional(number, 16)
+    memory    = optional(number, 16)
+    disk_size = optional(number, 64)
   })
 }
 

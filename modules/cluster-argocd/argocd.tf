@@ -19,38 +19,18 @@ resource "helm_release" "argocd" {
             enabled = true
           }
         }
-
-        cmp = {
-          create = true
-          plugins = {
-            cdk8s-deno = {
-              generate = {
-                command = ["deno", "task", "synth"]
-              }
-              discover = {
-                fileName = "deno.json"
-              }
-            }
-          }
-        }
       }
 
       repoServer = {
         extraContainers = [
           {
-            name    = "cdk8s-deno-cmp"
-            command = ["/var/run/argocd/argocd-cmp-server"]
-            image   = "denoland/deno:2.2.3"
+            name  = "cdk8s-deno-cmp"
+            image = "ghcr.io/aaronkyriesenbach/argocd-cdk8s-deno-plugin:v1.0.0-snapshot"
             securityContext = {
               runAsNonRoot = true
               runAsUser    = 999
             }
             volumeMounts = [
-              {
-                name      = "plugin-config"
-                mountPath = "/home/argocd/cmp-server/config/plugin.yaml"
-                subPath   = "cdk8s-deno.yaml"
-              },
               {
                 name      = "var-files"
                 mountPath = "/var/run/argocd"
@@ -62,10 +42,6 @@ resource "helm_release" "argocd" {
               {
                 name      = "cmp-tmp"
                 mountPath = "/tmp"
-              },
-              {
-                name      = "cmp-tmp"
-                mountPath = "/deno-dir"
               }
             ]
           }
@@ -73,13 +49,7 @@ resource "helm_release" "argocd" {
 
         volumes = [
           {
-            name = "plugin-config"
-            configMap = {
-              name = "argocd-cmp-cm"
-            }
-          },
-          {
-            name     = "cmp-tmp"
+            name = "cmp-tmp"
             emptyDir = {}
           }
         ]

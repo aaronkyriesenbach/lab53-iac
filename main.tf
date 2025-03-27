@@ -24,25 +24,6 @@ module "docker" {
   }
 }
 
-module "k3s" {
-  source = "./modules/vm"
-
-  name          = "k3s"
-  id            = 201
-  start_on_boot = false
-
-  cpu_cores = 2
-  memory    = 8
-
-  disk = {
-    size = 16
-  }
-
-  cloud_init = {
-    password = var.cloud_init_password
-  }
-}
-
 resource "proxmox_virtual_environment_hardware_mapping_pci" "h710" {
   name = "h710"
 
@@ -59,7 +40,7 @@ module "truenas" {
   source = "./modules/vm"
 
   name = "truenas"
-  id   = 202
+  id   = 400
 
   machine_type  = "q35"
   agent_enabled = false
@@ -69,6 +50,7 @@ module "truenas" {
 
   disk = {
     size = 32
+    format = "raw"
   }
 
   pci_mappings = {
@@ -80,27 +62,5 @@ module "truenas" {
 
   cloud_init = {
     enabled = false
-  }
-}
-
-module "docker-public" {
-  source = "./modules/vm"
-
-  name = "docker-public"
-  id   = 300
-
-  cpu_cores = 4
-  memory    = 32
-
-  disk = {
-    size = 48
-  }
-
-  cloud_init = {
-    password = var.cloud_init_password,
-    network = {
-      ip_address = "192.168.4.86/24",
-      gateway    = local.gateway_ip
-    }
   }
 }

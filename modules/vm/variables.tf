@@ -44,7 +44,8 @@ variable "disk" {
   description = "Drive parameters"
   type = object({
     size    = optional(number, 8),
-    file_id = optional(string)
+    file_id = optional(string),
+    format = optional(string)
   })
   default = {}
 }

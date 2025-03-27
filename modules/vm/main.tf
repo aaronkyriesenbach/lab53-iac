@@ -37,6 +37,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     size      = var.disk.size
 
     file_id = var.disk.file_id
+    file_format = var.disk.format
   }
 
   dynamic "initialization" {
